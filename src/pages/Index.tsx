@@ -24,9 +24,25 @@ interface User {
   avatar: string;
 }
 
+interface StickerPack {
+  id: string;
+  name: string;
+  stickers: string[];
+  description: string;
+}
+
+interface Meme {
+  id: string;
+  text: string;
+  emoji: string;
+  category: 'bear' | 'taiga' | 'cold' | 'siberian';
+}
+
 const SibCHAT: React.FC = () => {
   const [activeTab, setActiveTab] = useState('chats');
   const [searchQuery, setSearchQuery] = useState('');
+  const [showStickers, setShowStickers] = useState(false);
+  const [selectedStickerPack, setSelectedStickerPack] = useState<string>('bears');
 
   // Моковые данные для демонстрации
   const chats: Chat[] = [
@@ -76,6 +92,48 @@ const SibCHAT: React.FC = () => {
     avatar: '🧊'
   };
 
+  // Сибирские стикерпаки
+  const stickerPacks: StickerPack[] = [
+    {
+      id: 'bears',
+      name: 'Медведи Сибири',
+      description: 'Классические медвежьи эмоции',
+      stickers: ['🐻', '🐻‍❄️', '🧸', '🐻💤', '🐻😴', '🐻😡', '🐻❤️', '🐻🍯', '🐻🎣', '🐻⛄', '🐻🌲', '🐻💪']
+    },
+    {
+      id: 'taiga',
+      name: 'Тайга и природа',
+      description: 'Красота сибирской природы',
+      stickers: ['🌲', '🌲❄️', '🏔️', '🦌', '🦉', '🐺', '🌨️', '❄️', '🔥', '🏕️', '⛄', '🌌']
+    },
+    {
+      id: 'winter',
+      name: 'Сибирская зима',
+      description: 'Холодно, но красиво',
+      stickers: ['🧊', '⛷️', '🛷', '🧣', '🧤', '👘', '🥶', '☃️', '🌨️', '❄️⭐', '🔥🏠', '🍲']
+    },
+    {
+      id: 'life',
+      name: 'Сибирский быт',
+      description: 'Повседневная жизнь в Сибири',
+      stickers: ['🏠', '🪓', '🎣', '🍄', '🥛', '🍞', '🧙‍♂️', '🪆', '🚂', '🛤️', '⚡', '📡']
+    }
+  ];
+
+  // Сибирские мемы
+  const memes: Meme[] = [
+    { id: '1', text: 'Ну ты и медведь!', emoji: '🐻😅', category: 'bear' },
+    { id: '2', text: 'Чё, мамонт?', emoji: '🦣🤔', category: 'siberian' },
+    { id: '3', text: 'Извини, в тайге связь пропала', emoji: '🌲📵', category: 'taiga' },
+    { id: '4', text: 'На улице +5, можно в шортах', emoji: '🩳☀️', category: 'cold' },
+    { id: '5', text: 'Сегодня тепло, всего -20', emoji: '🌡️😎', category: 'cold' },
+    { id: '6', text: 'Медведь за углом? Норм, соседи', emoji: '🐻🏠', category: 'bear' },
+    { id: '7', text: 'Что такое лето? Не слышал', emoji: '❄️🤷', category: 'cold' },
+    { id: '8', text: 'В Сибири два сезона: зима и плохие дороги', emoji: '🛤️😂', category: 'siberian' },
+    { id: '9', text: 'Пошёл за хлебом, вернулся с рыбой', emoji: '🎣🍞', category: 'taiga' },
+    { id: '10', text: 'Шаман сказал - будет снег', emoji: '🧙‍♂️❄️', category: 'siberian' }
+  ];
+
   const filteredChats = chats.filter(chat => 
     chat.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -90,6 +148,7 @@ const SibCHAT: React.FC = () => {
       case 'settings': return 'Settings';
       case 'archive': return 'Archive';
       case 'shaman': return 'Sparkles';
+      case 'stickers': return 'Smile';
       default: return 'MessageCircle';
     }
   };
@@ -104,6 +163,7 @@ const SibCHAT: React.FC = () => {
       case 'settings': return 'Настройки';
       case 'archive': return 'Ледяной ящик';
       case 'shaman': return 'Шаман-бот';
+      case 'stickers': return 'Стикеры';
       default: return tab;
     }
   };
@@ -319,6 +379,13 @@ const SibCHAT: React.FC = () => {
               <Button variant="ghost" size="sm">
                 <Icon name="Search" size={18} />
               </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => setActiveTab('stickers')}
+              >
+                <Icon name="Smile" size={18} />
+              </Button>
               <Button variant="ghost" size="sm">
                 <Icon name="Plus" size={18} />
               </Button>
@@ -330,8 +397,8 @@ const SibCHAT: React.FC = () => {
       <div className="max-w-2xl mx-auto px-4 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           {/* Навигация */}
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-6 bg-muted">
-            {['chats', 'groups', 'channels', 'profile', 'taiga', 'settings', 'archive', 'shaman'].map((tab) => (
+          <TabsList className="grid w-full grid-cols-5 lg:grid-cols-9 mb-6 bg-muted">
+            {['chats', 'groups', 'channels', 'stickers', 'profile', 'taiga', 'settings', 'archive', 'shaman'].map((tab) => (
               <TabsTrigger 
                 key={tab} 
                 value={tab} 
@@ -421,12 +488,149 @@ const SibCHAT: React.FC = () => {
             </div>
           </TabsContent>
 
+          {/* Стикеры */}
+          <TabsContent value="stickers" className="space-y-4">
+            {/* Панель стикерпаков */}
+            <div className="flex space-x-2 overflow-x-auto pb-2">
+              {stickerPacks.map((pack) => (
+                <Button
+                  key={pack.id}
+                  variant={selectedStickerPack === pack.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedStickerPack(pack.id)}
+                  className="whitespace-nowrap"
+                >
+                  {pack.name}
+                </Button>
+              ))}
+            </div>
+
+            {/* Стикеры выбранного пака */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-montserrat flex items-center gap-2">
+                  <Icon name="Smile" size={20} />
+                  {stickerPacks.find(p => p.id === selectedStickerPack)?.name}
+                </CardTitle>
+                <p className="text-sm text-muted-foreground">
+                  {stickerPacks.find(p => p.id === selectedStickerPack)?.description}
+                </p>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-6 gap-3">
+                  {stickerPacks.find(p => p.id === selectedStickerPack)?.stickers.map((sticker, index) => (
+                    <Button
+                      key={index}
+                      variant="ghost"
+                      className="h-16 text-3xl hover:bg-secondary bear-tracks"
+                      onClick={() => {}}
+                    >
+                      {sticker}
+                    </Button>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Сибирские мемы */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="font-montserrat flex items-center gap-2">
+                  <Icon name="MessageSquare" size={20} />
+                  Сибирские мемы
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {memes.map((meme) => (
+                  <div
+                    key={meme.id}
+                    className="p-3 bg-muted rounded-lg hover:bg-secondary/70 cursor-pointer transition-colors bear-tracks"
+                    onClick={() => {}}
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{meme.emoji}</span>
+                      <div className="flex-1">
+                        <p className="font-medium">{meme.text}</p>
+                        <Badge variant="secondary" className="text-xs mt-1">
+                          {meme.category === 'bear' && '🐻 Медведи'}
+                          {meme.category === 'taiga' && '🌲 Тайга'}
+                          {meme.category === 'cold' && '❄️ Холод'}
+                          {meme.category === 'siberian' && '🏔️ Сибирь'}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Шаман-бот */}
           <TabsContent value="shaman">
             {renderShaman()}
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Плавающая кнопка стикеров для чатов */}
+      {activeTab === 'chats' && (
+        <div className="fixed bottom-6 right-6">
+          <Button
+            size="lg"
+            className="rounded-full h-14 w-14 bg-siberian-sunset hover:bg-siberian-sunset/90"
+            onClick={() => setShowStickers(!showStickers)}
+          >
+            <Icon name="Smile" size={24} />
+          </Button>
+        </div>
+      )}
+
+      {/* Всплывающая панель стикеров */}
+      {showStickers && activeTab === 'chats' && (
+        <div className="fixed bottom-24 right-6 w-80 max-w-[calc(100vw-2rem)]">
+          <Card className="max-h-96 overflow-hidden">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="font-montserrat text-lg">Быстрые стикеры</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowStickers(false)}
+                >
+                  <Icon name="X" size={16} />
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="overflow-y-auto max-h-64">
+              <div className="grid grid-cols-5 gap-2">
+                {stickerPacks[0].stickers.slice(0, 10).map((sticker, index) => (
+                  <Button
+                    key={index}
+                    variant="ghost"
+                    className="h-12 text-2xl hover:bg-secondary"
+                    onClick={() => setShowStickers(false)}
+                  >
+                    {sticker}
+                  </Button>
+                ))}
+              </div>
+              <div className="mt-3 pt-3 border-t">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => {
+                    setActiveTab('stickers');
+                    setShowStickers(false);
+                  }}
+                >
+                  Все стикеры
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 };
