@@ -18,7 +18,18 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'montserrat': ['Montserrat', 'system-ui', 'sans-serif'],
+				'open-sans': ['Open Sans', 'system-ui', 'sans-serif'],
+			},
 			colors: {
+				// Сибирские цвета
+				siberian: {
+					ice: 'hsl(var(--siberian-ice))',
+					forest: 'hsl(var(--siberian-forest))',
+					sunset: 'hsl(var(--siberian-sunset))',
+					river: 'hsl(var(--siberian-river))',
+				},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -69,6 +80,22 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
+				// Сибирские анимации
+				aurora: {
+					'0%, 100%': { 'background-position': '0% 50%' },
+					'50%': { 'background-position': '100% 50%' },
+				},
+				fall: {
+					'0%': { transform: 'translateY(-100vh) rotate(0deg)', opacity: '0' },
+					'10%': { opacity: '1' },
+					'90%': { opacity: '1' },
+					'100%': { transform: 'translateY(100vh) rotate(360deg)', opacity: '0' },
+				},
+				tracks: {
+					'0%': { opacity: '0', transform: 'translateY(-50%) scale(0)' },
+					'50%': { opacity: '1', transform: 'translateY(-50%) scale(1.2)' },
+					'100%': { opacity: '0', transform: 'translateY(-50%) scale(1)' },
+				},
 				'accordion-down': {
 					from: {
 						height: '0'
@@ -88,7 +115,11 @@ export default {
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				// Сибирские анимации
+				aurora: 'aurora 8s ease-in-out infinite',
+				fall: 'fall 3s linear infinite',
+				tracks: 'tracks 0.6s ease-out',
 			}
 		}
 	},
